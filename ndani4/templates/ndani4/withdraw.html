@@ -1,0 +1,116 @@
+{% extends 'ndani4/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Withdraw Funds</h2>
+    
+    <!-- Success Message (Initially Hidden) -->
+    <div id="success-message" class="alert alert-success" style="display: none;">
+        Withdrawal request submitted successfully!
+    </div>
+    
+    <div class="alert alert-info mb-4" role="alert">
+        <h4 class="alert-heading">Important Guidelines:</h4>
+        <ul>
+            <li><strong>Approval Email:</strong> Ensure that you have received an approval email with a unique code and the amount credited to your account.</li>
+            <li><strong>Code Entry:</strong> Enter the approval code below to proceed with your withdrawal.</li>
+            <li><strong>Valid Withdrawal Methods:</strong> You can withdraw funds using PayPal, Mpesa, or Credit/Debit Card.</li>
+            <li><strong>Do Not Share Your Code With Anyone</strong></li>
+            <li><strong>We use this payment method for security purposes.</strong></li>
+        </ul>
+    </div>
+    
+    <form method="POST" action="{% url 'withdraw' %}" id="withdraw-form">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="amount" class="form-label">Amount to Withdraw</label>
+            <input type="number" class="form-control" id="amount" name="amount" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="withdraw_method" class="form-label">Withdrawal Method</label>
+            <select class="form-control" id="withdraw_method" name="withdraw_method" required onchange="showPaymentDetails()">
+                <option value="paypal">PayPal</option>
+                <option value="mpesa">Mpesa</option>
+                <option value="credit_card">Credit/Debit Card</option>
+            </select>
+        </div>
+        
+        <!-- Payment Method Specific Fields -->
+        <div id="paypal_details" class="payment-method-fields" style="display:none;">
+            <div class="mb-3">
+                <label for="paypal_email" class="form-label">PayPal Email</label>
+                <input type="email" class="form-control" id="paypal_email" name="paypal_email" placeholder="Enter your PayPal email" required>
+            </div>
+        </div>
+        
+        <div id="mpesa_details" class="payment-method-fields" style="display:none;">
+            <div class="mb-3">
+                <label for="phone_number" class="form-label">Phone Number (Mpesa)</label>
+                <input type="tel" class="form-control" id="phone_number" name="phone_number" placeholder="Enter your Mpesa phone number" required>
+            </div>
+        </div>
+        
+        <div id="credit_card_details" class="payment-method-fields" style="display:none;">
+            <div class="mb-3">
+                <label for="card_number" class="form-label">Card Number</label>
+                <input type="text" class="form-control" id="card_number" name="card_number" placeholder="Enter your card number" required>
+            </div>
+            <div class="mb-3">
+                <label for="expiry_date" class="form-label">Expiration Date</label>
+                <input type="month" class="form-control" id="expiry_date" name="expiry_date" required>
+            </div>
+            <div class="mb-3">
+                <label for="cvv" class="form-label">CVV</label>
+                <input type="text" class="form-control" id="cvv" name="cvv" placeholder="Enter your card CVV" required>
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="approval_code" class="form-label">Approval Code</label>
+            <input type="text" class="form-control" id="approval_code" name="approval_code" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" onclick="showSuccessMessage(event)">Submit</button>
+    </form>
+</div>
+
+<script>
+    function showPaymentDetails() {
+        // Hide all payment-specific fields first
+        document.getElementById('paypal_details').style.display = 'none';
+        document.getElementById('mpesa_details').style.display = 'none';
+        document.getElementById('credit_card_details').style.display = 'none';
+
+        var method = document.getElementById('withdraw_method').value;
+        
+        // Show the relevant fields based on the selected withdrawal method
+        if (method === 'paypal') {
+            document.getElementById('paypal_details').style.display = 'block';
+        } else if (method === 'mpesa') {
+            document.getElementById('mpesa_details').style.display = 'block';
+        } else if (method === 'credit_card') {
+            document.getElementById('credit_card_details').style.display = 'block';
+        }
+    }
+
+    function showSuccessMessage(event) {
+        event.preventDefault();  // Prevent the form from submitting immediately
+        
+        // Show the success message
+        document.getElementById('success-message').style.display = 'block';
+        
+        // Submit the form after 2 seconds
+        setTimeout(function() {
+            document.getElementById('withdraw-form').submit();  // Submit the form
+        }, 2000);  // Wait 2 seconds before submitting the form
+    }
+</script>
+
+{% endblock content %}

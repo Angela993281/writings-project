@@ -1,0 +1,53 @@
+{% extends "ndani4/base.html" %}
+
+{% block content %}
+
+<!-- Submit Work Section -->
+<section id="submit" class="bg-light py-5">
+  <div class="container">
+    <h2 class="text-center mb-4">Submit Your Task</h2>
+    <form id="submitForm">
+      <div class="mb-3">
+        <label for="taskId" class="form-label">Task ID</label>
+        <input type="text" class="form-control" id="taskId" placeholder="Enter Task ID" required>
+      </div>
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="name" placeholder="Enter your username" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email address</label>
+        <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+      </div>
+      <div class="mb-3">
+        <label for="file" class="form-label">Upload File</label>
+        <input type="file" class="form-control" id="file" required>
+      </div>
+      <button type="submit" class="btn btn-success">Submit Work</button>
+    </form>
+
+    <!-- Success Message for Submit Work -->
+    <div id="successMessage" class="alert alert-success mt-3" role="alert" style="display: none;">
+      Work submitted successfully!
+    </div>
+  </div>
+</section>
+
+<!-- JavaScript for Apply Now Button -->
+<script>
+  document.querySelectorAll('.apply-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      window.location.href = "#"; // Keeps the user on the same page
+    });
+  });
+
+  document.getElementById("submitForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    document.getElementById("successMessage").style.display = "block";
+    document.getElementById("submitForm").reset();
+  });
+</script>
+
+
+
+{% endblock content %}

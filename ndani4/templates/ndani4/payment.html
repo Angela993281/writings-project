@@ -1,0 +1,110 @@
+{% extends "ndani4/base.html" %}
+{% block content %}
+<div class="container">
+  <h2 class="text-center mt-5">Make a Payment</h2>
+  <p class="text-center">Proceed with your payment below:</p>
+  
+  <form id="payment-form" action="{% url 'payment' %}" method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label for="payment" class="form-label">Payment Method</label>
+      <select class="form-control" id="payment" name="payment" onchange="showPaymentDetails()">
+        <option value="" selected disabled>Select Payment Method</option>
+        <option value="mpesa">M-Pesa</option>
+        <option value="paypal">PayPal</option>
+        <option value="card">Credit/Debit Card</option>
+      </select>
+    </div>
+
+    <!-- Payment Details Section -->
+    <div id="payment-details" class="alert alert-info mt-3" style="display: none;"></div>
+
+    <!-- Confirmation Message Textarea -->
+    <div id="confirmation-section" class="mt-3" style="display: none;">
+      <label for="confirmation-message" class="form-label">Paste Your Payment Confirmation Message:</label>
+      <textarea class="form-control" id="confirmation-message" name="confirmation-message" rows="4" required></textarea>
+
+      <!-- Checkbox for confirmation -->
+      <div class="form-check mt-2">
+        <input class="form-check-input" type="checkbox" id="confirm-checkbox" required>
+        <label class="form-check-label" for="confirm-checkbox">I confirm that I have pasted the correct payment confirmation message</label>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-success mt-3">Submit Payment</button>
+    </div>
+  </form>
+
+  <!-- Success Message -->
+  <div id="success-message" class="alert alert-success mt-3" style="display: none;">
+    Payment confirmation submitted successfully!
+  </div>
+</div>
+
+<script>
+  function showPaymentDetails() {
+    var paymentMethod = document.getElementById("payment").value;
+    var paymentDetailsDiv = document.getElementById("payment-details");
+    var confirmationSection = document.getElementById("confirmation-section");
+
+    if (paymentMethod === "mpesa") {
+      paymentDetailsDiv.innerHTML = `
+        <strong>How to Pay using M-Pesa:</strong>
+        <ol>
+          <li>Go to your M-Pesa menu</li>
+          <li>Select <b>Lipa na M-Pesa</b></li>
+          <li>Select <b>Pochi la biashara</b></li>
+          
+          <li>Enter Account Number: <b>0703518702</b></li>
+          <li>Enter the amount and confirm</li>
+          <li>Enter your M-Pesa PIN and press OK</li>
+          <li>You will receive a confirmation SMS</li>
+        </ol>
+      `;
+      paymentDetailsDiv.style.display = "block";
+      confirmationSection.style.display = "block";
+    } 
+    else if (paymentMethod === "paypal") {
+      paymentDetailsDiv.innerHTML = `
+        <strong>How to Pay using PayPal:</strong>
+        <ol>
+          <li>Log in to your <b>PayPal</b> account</li>
+          <li>Click on <b>Send & Request</b></li>
+          <li>Enter recipient's email: <b>johnnjenga@gmail.com</b></li>
+          <li>Enter the amount and currency</li>
+          <li>Review and confirm payment</li>
+          <li>Click <b>Send</b> to complete the transaction</li>
+          <li>You will receive an email confirmation</li>
+        </ol>
+      `;
+      paymentDetailsDiv.style.display = "block";
+      confirmationSection.style.display = "block";
+    } 
+    else if (paymentMethod === "card") {
+      paymentDetailsDiv.innerHTML = `
+        <strong>How to Pay using Credit/Debit Card:</strong>
+        <ol>
+          <li>Enter your card details on the next step</li>
+          <li>Provide card number, expiry date, and CVV</li>
+          <li>Confirm payment and authorize if required</li>
+          <li>You will receive a confirmation message</li>
+        </ol>
+      `;
+      paymentDetailsDiv.style.display = "block";
+      confirmationSection.style.display = "block";
+    } 
+    else {
+      paymentDetailsDiv.style.display = "none";
+      confirmationSection.style.display = "none";
+    }
+  }
+
+  // Show success message when form is submitted
+  document.getElementById("payment-form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent actual form submission
+    document.getElementById("success-message").style.display = "block";
+  });
+</script>
+
+{% endblock %}
