@@ -157,3 +157,9 @@ ALLOWED_HOSTS = ["*"]  # Render manages domains
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # For Whitenoise
+import os
+
+ALLOWED_HOSTS = ["your-app-name.onrender.com"]  # Change this after deployment
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
